@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import AddHabit from "./AddHabit";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../reduxStore/store";
+import { addHabit } from "../reduxStore/habitSlice";
 
 interface frequency {
     value: string;
@@ -21,21 +24,17 @@ const selectedOptions : frequency[] = [
 
 export default function Habit(){
     const [habit, setHabit] = useState<string>("")
-    const [habitArr, setHabitArr] = useState<HabitArr[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
+    const habitArr = useSelector((state:RootState) =>state.habitStore.habits)
 
 
     function handleAddHabit(){
         if (habit.trim()){
-            setHabitArr(prevHabits =>[
-                ...prevHabits,
-                {
-                    completed: false,
-                    id: Date.now(),
-                    numberOfStreaks: "2",
-                    habitName: habit,
-                    frequency: "Daily",
-                }
-            ])
+           dispatch(addHabit({
+            id: Date.now().toString(),
+            habit: habit,
+            
+           }))
         }
         setHabit("");
     }
