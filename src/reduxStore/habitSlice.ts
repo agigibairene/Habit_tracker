@@ -20,10 +20,14 @@ const habitSlice = createSlice({
     reducers:{
         addHabit(state, action){
             const newHabit = action.payload;
-            state.habits.push({...newHabit})
+            const findHabit = state.habits.find(habit => habit.id === newHabit.id);
+            if (!findHabit){
+                state.habits.push({...newHabit})
+            }
         },
         removeHabit(state, action){
-
+            const oldHabit = action.payload;
+            state.habits = state.habits.filter(item => item.id !== oldHabit.id);
         }
     }
 });

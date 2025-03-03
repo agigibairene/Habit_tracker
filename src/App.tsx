@@ -1,9 +1,11 @@
+import Habit from "./components/Habit";
+import "./style.css";
 
 function App() {
 
   return (
     <>
-      <h1>Habit Tracker</h1>
+      <Habit />
     </>
   )
 }
