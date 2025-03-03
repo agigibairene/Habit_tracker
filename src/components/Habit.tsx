@@ -1,8 +1,17 @@
 import React, { useState } from "react";
+import AddHabit from "./AddHabit";
 
 interface frequency {
     value: string;
     name: string;
+}
+
+interface HabitArr{
+    completed: boolean;
+    id: number;
+    numberOfStreaks: string;
+    habitName: string;
+    frequency: string;
 }
 
 const selectedOptions : frequency[] = [
@@ -12,16 +21,34 @@ const selectedOptions : frequency[] = [
 
 export default function Habit(){
     const [habit, setHabit] = useState<string>("")
+    const [habitArr, setHabitArr] = useState<HabitArr[]>([]);
 
+
+    function handleAddHabit(){
+        if (habit.trim()){
+            setHabitArr(prevHabits =>[
+                ...prevHabits,
+                {
+                    completed: false,
+                    id: Date.now(),
+                    numberOfStreaks: "2",
+                    habitName: habit,
+                    frequency: "Daily",
+                }
+            ])
+        }
+        setHabit("");
+    }
 
     return(
         <section className="flex flex-col w-2/4 max-h-screen mx-auto justify-center my-10">
             <h1 className="font-bold text-3xl text-center mb-4">Habit Tracker</h1>
-            <form>
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>)=>e.preventDefault()}>
                 <input 
                     className="px-4 py-3 outline-1 outline-blue-300 w-full border my-4"
                     type="text" 
                     placeholder="Enter your Habit"
+                    value={habit}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>)=>setHabit(e.target.value)}
                 />
                 <label>
@@ -38,9 +65,23 @@ export default function Habit(){
                     </select>
                 </label>
 
-                <button className="bg-blue-400 text-white uppercase py-3 w-full rounded-md font-bold">Add Habit</button>
-            </form>
+                <button 
+                    onClick={handleAddHabit}
+                    className="bg-blue-400 text-white uppercase py-3 w-full rounded-md font-bold"
+                >
+                    Add Habit
+                </button>
 
+                {
+                    habitArr && habitArr.map((habit)=>{
+                        const {habitName, numberOfStreaks, frequency} = habit;
+                        return (
+                            <AddHabit frequency={frequency} habit={habitName} streak={numberOfStreaks} key={habitName}/>
+                        )
+                    })
+                }
+
+            </form>
 
         </section>
     )
