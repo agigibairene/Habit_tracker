@@ -2,7 +2,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../reduxStore/store";
-import { removeHabit } from "../reduxStore/habitSlice";
+import { removeHabit, handleProgress, progressBarColor } from "../reduxStore/habitSlice";
+import ProgressBar from "./ProgressBar";
 
 
 interface HabitTile{
@@ -27,7 +28,10 @@ export default function AddHabit({habitName, frequency, streak, id} : HabitTile)
                 </div>
 
                 <div className="flex gap-4">
-                    <button className="uppercase px-1 py-2 border md:px-2 md:py-3 md:text-lg text-sm rounded-md border-green-500 flex items-center gap-3">
+                    <button 
+                        onClick={()=>{dispatch(handleProgress()); dispatch(progressBarColor())}}
+                        className="uppercase px-1 py-2 border md:px-2 md:py-3 md:text-lg text-sm rounded-md border-green-500 flex items-center gap-3"
+                    >
                         <FaCircleCheck color="green" size={15}/>
                         completed
                     </button>
@@ -42,6 +46,8 @@ export default function AddHabit({habitName, frequency, streak, id} : HabitTile)
             </div>
 
             <p>Current streak: {streak}</p>
+
+            <ProgressBar />
         </div>
     )
 }
