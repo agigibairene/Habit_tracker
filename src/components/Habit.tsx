@@ -9,13 +9,6 @@ interface frequency {
     name: string;
 }
 
-interface HabitArr{
-    completed: boolean;
-    id: number;
-    numberOfStreaks: string;
-    habitName: string;
-    frequency: string;
-}
 
 const selectedOptions : frequency[] = [
     {value: "daily", name: "Daily"},
@@ -25,22 +18,24 @@ const selectedOptions : frequency[] = [
 export default function Habit(){
     const [habit, setHabit] = useState<string>("")
     const dispatch = useDispatch<AppDispatch>();
-    const habitArr = useSelector((state:RootState) =>state.habitStore.habits)
+    const habitArr = useSelector((state:RootState) =>state.habitStore.habits);
+    const [selectedOption, setSelectedOption] = useState<string>("")
 
 
     function handleAddHabit(){
-        if (habit.trim()){
+        if (habit.trim() && selectedOption.trim()){
            dispatch(addHabit({
             id: Date.now().toString(),
-            habit: habit,
-            
+            name: habit,
+            frequency: selectedOption,
+            createdAt: new Date().toISOString(),
            }))
         }
         setHabit("");
     }
 
     return(
-        <section className="flex flex-col w-2/4 max-h-screen mx-auto justify-center my-10">
+        <section className="flex flex-col w-2/4  mx-auto justify-center my-10">
             <h1 className="font-bold text-3xl text-center mb-4">Habit Tracker</h1>
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>)=>e.preventDefault()}>
                 <input 
@@ -52,7 +47,11 @@ export default function Habit(){
                 />
                 <label>
                    
-                    <select name="freq" className="w-full border py-3 my-4 px-4">
+                    <select 
+                        name="freq" 
+                        className="w-full border py-3 my-4 px-4"
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>setSelectedOption(e.target.value)}
+                    >
                         {
                             selectedOptions.map((item)=>{
                                 const {value, name} = item;
@@ -66,16 +65,16 @@ export default function Habit(){
 
                 <button 
                     onClick={handleAddHabit}
-                    className="bg-blue-400 text-white uppercase py-3 w-full rounded-md font-bold"
+                    className="bg-blue-400 text-white outline-none uppercase py-3 w-full rounded-md font-bold"
                 >
                     Add Habit
                 </button>
 
                 {
-                    habitArr && habitArr.map((habit)=>{
-                        const {habitName, numberOfStreaks, frequency} = habit;
+                    habitArr && habitArr.map((habits)=>{
+                        const {name, id,  frequency} = habits;
                         return (
-                            <AddHabit frequency={frequency} habit={habitName} streak={numberOfStreaks} key={habitName}/>
+                            <AddHabit habitName={name} key={id} id={id} frequency={frequency} streak="1" />
                         )
                     })
                 }

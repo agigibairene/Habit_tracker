@@ -22,12 +22,12 @@ const habitSlice = createSlice({
             const newHabit = action.payload;
             const findHabit = state.habits.find(habit => habit.id === newHabit.id);
             if (!findHabit){
-                state.habits.push({...newHabit})
+                state.habits.push({...newHabit, completedDate: []})
             }
         },
         removeHabit(state, action){
             const oldHabit = action.payload;
-            state.habits = state.habits.filter(item => item.id !== oldHabit.id);
+            state.habits = state.habits.filter(item => item.id !== oldHabit);
         }
     }
 });
